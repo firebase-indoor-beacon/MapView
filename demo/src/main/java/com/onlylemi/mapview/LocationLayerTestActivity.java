@@ -37,7 +37,7 @@ public class LocationLayerTestActivity extends AppCompatActivity implements Sens
         mapView = (MapView) findViewById(R.id.mapview);
         Bitmap bitmap = null;
         try {
-            bitmap = BitmapFactory.decodeStream(getAssets().open("map.png"));
+            bitmap = BitmapFactory.decodeStream(getAssets().open("pic.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
