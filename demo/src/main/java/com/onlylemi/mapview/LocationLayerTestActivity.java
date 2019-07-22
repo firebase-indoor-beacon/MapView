@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -45,11 +46,13 @@ public class LocationLayerTestActivity extends AppCompatActivity implements Sens
         mapView.setMapViewListener(new MapViewListener() {
             @Override
             public void onMapLoadSuccess() {
-                locationLayer = new LocationLayer(mapView, new PointF(400, 400));
+                locationLayer = new LocationLayer(mapView, new PointF(400, 150));
                 locationLayer.setOpenCompass(true);
-                locationLayer.setCompassIndicatorCircleRotateDegree(60);
-                locationLayer.setCompassIndicatorArrowRotateDegree(-30);
+                //locationLayer.setCompassIndicatorCircleRotateDegree(60);
+                //locationLayer.setCompassIndicatorArrowRotateDegree(-30);
+                Log.d("msg","start");
                 mapView.addLayer(locationLayer);
+
                 mapView.refresh();
             }
 
@@ -60,12 +63,14 @@ public class LocationLayerTestActivity extends AppCompatActivity implements Sens
 
         });
 
-
+        Log.d("msg","oncreate");
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d("msg","onCreateOptionsMenu");
         getMenuInflater().inflate(R.menu.menu_location_layer_test, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -83,7 +88,7 @@ public class LocationLayerTestActivity extends AppCompatActivity implements Sens
                     locationLayer.setOpenCompass(!locationLayer.isOpenCompass());
                     mapView.refresh();
                     break;
-                case R.id.location_layer_set_compass_circle_rotate:
+               case R.id.location_layer_set_compass_circle_rotate:
                     float rotate = 90;
                     locationLayer.setCompassIndicatorCircleRotateDegree(rotate);
                     mapView.refresh();
@@ -98,13 +103,16 @@ public class LocationLayerTestActivity extends AppCompatActivity implements Sens
                 case R.id.location_layer_set_auto_sensor:
                     if (openSensor) {
                         item.setTitle("Open Sensor");
+                        Log.d("msg","Open=");
                         sensorManager.unregisterListener(this);
                     } else {
                         item.setTitle("Close Sensor");
+                        Log.d("msg","Close");
                         sensorManager.registerListener(this, sensorManager.getDefaultSensor
                                 (Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_NORMAL);
                     }
                     openSensor = !openSensor;
+                    Log.d("msg","openSensor="+openSensor+"=!"+(!openSensor));
                     break;
                 default:
                     break;
@@ -115,17 +123,20 @@ public class LocationLayerTestActivity extends AppCompatActivity implements Sens
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        Log.d("msg","onsensor");
         if (mapView.isMapLoadFinish() && openSensor) {
             float mapDegree = 0; // the rotate between reality map to northern
             float degree = 0;
-            if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
-                degree = event.values[0];
-            }
+            /*if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
 
+
+            }*/degree = event.values[0];
+            Log.d("msg","degree="+degree);
             locationLayer.setCompassIndicatorCircleRotateDegree(-degree);
             locationLayer.setCompassIndicatorArrowRotateDegree(mapDegree + mapView
                     .getCurrentRotateDegrees() + degree);
             mapView.refresh();
+            Log.d("msg","degree="+degree);
         }
     }
 
@@ -139,4 +150,5 @@ public class LocationLayerTestActivity extends AppCompatActivity implements Sens
         super.onDestroy();
         sensorManager.unregisterListener(this);
     }
+
 }

@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context="com.onlylemi.mapview.LocationLayerTestActivity">
 
-    <include layout="@layout/map_view"/>
+    <include layout="@layout/map_view" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/compass_pic" />
 
 </RelativeLayout>
